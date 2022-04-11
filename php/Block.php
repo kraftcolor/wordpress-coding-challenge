@@ -63,7 +63,7 @@ class Block {
 	 * @return string The markup of the block.
 	 */
 	public function render_callback( $attributes, $content, $block ) {
-		$post_types = get_post_types(  [ 'public' => true ] );
+		$post_types = get_post_types( [ 'public' => true ] );
 		$class_name = $attributes['className'];
 		ob_start();
 
@@ -93,33 +93,31 @@ class Block {
 			<p><?php echo 'The current post ID is ' . $_GET['post_id'] . '.'; ?></p>
 
 			<?php
-			$query = new WP_Query(  array(
-				'post_type' => ['post', 'page'],
+			$query = new WP_Query( [
+				'post_type' => [ 'post', 'page' ],
 				'post_status' => 'any',
-				'date_query' => array(
-					array(
+				'date_query' => [
+					[
 						'hour'      => 9,
 						'compare'   => '>=',
-					),
-					array(
+					],
+					[
 						'hour' => 17,
 						'compare'=> '<=',
-					),
-				),
+					],
+				],
 				'tag'  => 'foo',
 				'category_name'  => 'baz',
 				'post__not_in' => [ get_the_ID() ],
-			));
+			] );
 
-			if ( $query->have_posts() ) :
-				?>
-				 <h2>5 posts with the tag of foo and the category of baz</h2>
-				 <ul>
-				 	<?php foreach ( array_slice( $query->posts, 0, 5 ) as $post ) : ?>
+			if ( $query->have_posts() ) : ?>
+				<h2>5 posts with the tag of foo and the category of baz</h2>
+				<ul>
+					<?php foreach ( array_slice( $query->posts, 0, 5 ) as $post ) : ?>
 						<li><?php echo $post->post_title ?></li>
 					<?php endforeach;
-			endif;
-		 	?>
+			endif; ?>
 			</ul>
 		</div>
 		<?php
