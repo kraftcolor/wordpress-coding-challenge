@@ -40,6 +40,21 @@ class Block {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_block' ] );
+
+		// Clear cache when a post is updated, post status changes, category or tag updated.
+		add_action( 'edit_term', array( $this, 'flush_caches' ), 10, 3 );
+		add_action( 'edit_category', array( $this, 'flush_caches' ), 10, 1 );
+		add_action( 'edit_post', array( $this, 'flush_caches' ), 10, 1 );
+	}
+
+	/**
+	 * Flush cached HTML markup.
+	 * HTML markup cached in render_posts_with_tag_cat() method.
+	 *
+	 * @return void
+	 */
+	public function flush_caches() {
+		wp_cache_delete( 'render_posts_with_tag_cat', 'site-counts' );
 	}
 
 	/**
@@ -100,45 +115,68 @@ class Block {
 				?>
 			</p>
 
-			<?php
-			$query = new WP_Query( [
-				'no_found_rows' => true,
-				'fields' => 'ids',
-				'post_type' => [ 'post', 'page' ],
-				'post_status' => 'any',
-				'date_query' => [
-					[
-						'hour'      => 9,
-						'compare'   => '>=',
-					],
-					[
-						'hour' => 17,
-						'compare'=> '<=',
-					],
-				],
-				'tag'  => 'foo',
-				'category_name'  => 'baz',
-				'posts_per_page' => 6,
-			] );
-
-			if ( $query->have_posts() ) : 
-				$posts = $query->posts;
-				$skip_index = array_search( get_the_ID(), $posts );
-
-				if ( $skip_index !== false ) :
-					unset( $posts[ $skip_index ] );
-				endif; ?>
-
-				<h2><?php _e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
-				<ul>
-					<?php foreach ( array_slice( $posts, 0, 5 ) as $post ) : ?>
-						<li><?php echo get_the_title( $post ) ?></li>
-					<?php endforeach;
-			endif; ?>
-			</ul>
+			<?php echo $this->render_posts_with_tag_cat(); ?>
 		</div>
 		<?php
 
 		return ob_get_clean();
 	}
+
+	/**
+	 * Render 5 posts with tag of `foo` and category of `bar`.
+	 * Caches the rendered HTML markip into object cache for 24 horus.
+	 *
+	 * @return string HTML markup
+	 */
+	public function render_posts_with_tag_cat() {
+		$cached = wp_cache_get( 'render_posts_with_tag_cat', 'site-counts' );
+
+		if ( $cached !== false ) {
+			return $cached;
+		}
+
+		$query = new WP_Query( [
+			'no_found_rows' => true,
+			'fields' => 'ids',
+			'post_type' => [ 'post', 'page' ],
+			'post_status' => 'any',
+			'date_query' => [
+				[
+					'hour'      => 9,
+					'compare'   => '>=',
+				],
+				[
+					'hour' => 17,
+					'compare'=> '<=',
+				],
+			],
+			'tag'  => 'foo',
+			'category_name'  => 'baz',
+			'posts_per_page' => 6,
+		] );
+
+		ob_start();
+
+		if ( $query->have_posts() ) : 
+			$posts = $query->posts;
+			$skip_index = array_search( get_the_ID(), $posts );
+
+			if ( $skip_index !== false ) :
+				unset( $posts[ $skip_index ] );
+			endif; ?>
+
+			<h2><?php _e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
+			<ul>
+				<?php foreach ( array_slice( $posts, 0, 5 ) as $post ) : ?>
+					<li><?php echo get_the_title( $post ) ?></li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif;
+
+		$html_content = ob_get_clean();
+		wp_cache_set( 'render_posts_with_tag_cat', $html_content, 'site-counts', DAY_IN_SECONDS );
+
+		return $html_content;
+	}
+
 }
