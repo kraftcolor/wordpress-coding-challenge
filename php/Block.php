@@ -69,25 +69,26 @@ class Block {
 
 		?>
 		<div class="<?php echo esc_attr( $class_name ); ?>">
-			<h2>Post Counts</h2>
+			<h2><?php esc_html_e( 'Post Counts', 'site-counts' ); ?></h2>
 			<ul>
-			<?php
-			foreach ( $post_types as $post_type_slug ) :
-				$post_type_object = get_post_type_object( $post_type_slug  );
-				$post_count = count(
-					get_posts(
-						[
-							'post_type' => $post_type_slug,
-							'posts_per_page' => -1,
-						]
-					)
-				);
+				<?php 
+					foreach ( $post_types as $post_type_slug ) :
+						$post_type_object = get_post_type_object( $post_type_slug  );
+						$post_count = wp_count_posts( $post_type_slug ); 
+						?>
+						<li>
+							<?php /* translators: 1: post count, 2: post type singular name, 3: Post type plural name */
+								echo sprintf( 
+									_n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ),
+									number_format_i18n( $post_count->publish ),
+									$post_type_object->labels->singular_name,
+									$post_type_object->labels->name
+								);
 
-				?>
-				<li>
-					<?php echo 'There are ' . $post_count . ' ' . $post_type_object->labels->name . '.'; ?>
-				</li>
-			<?php endforeach; ?>
+							?>
+
+						</li>
+				<?php endforeach; ?>
 			</ul>
 			
 			<p><?php echo 'The current post ID is ' . get_the_ID() . '.'; ?></p>
