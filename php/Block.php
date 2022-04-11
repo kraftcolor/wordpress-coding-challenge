@@ -84,10 +84,13 @@ class Block {
 				);
 
 				?>
-				<li><?php echo 'There are ' . $post_count . ' ' .
-					  $post_type_object->labels->name . '.'; ?></li>
-			<?php endforeach;	?>
-			</ul><p><?php echo 'The current post ID is ' . $_GET['post_id'] . '.'; ?></p>
+				<li>
+					<?php echo 'There are ' . $post_count . ' ' . $post_type_object->labels->name . '.'; ?>
+				</li>
+			<?php endforeach; ?>
+			</ul>
+			
+			<p><?php echo 'The current post ID is ' . $_GET['post_id'] . '.'; ?></p>
 
 			<?php
 			$query = new WP_Query(  array(
@@ -112,11 +115,9 @@ class Block {
 				?>
 				 <h2>5 posts with the tag of foo and the category of baz</h2>
 				 <ul>
-				 <?php
-
-				foreach ( array_slice( $query->posts, 0, 5 ) as $post ) :
-					?><li><?php echo $post->post_title ?></li><?php
-				endforeach;
+				 	<?php foreach ( array_slice( $query->posts, 0, 5 ) as $post ) : ?>
+						<li><?php echo $post->post_title ?></li>
+					<?php endforeach;
 			endif;
 		 	?>
 			</ul>
