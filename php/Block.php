@@ -64,11 +64,11 @@ class Block {
 	 */
 	public function render_callback( $attributes, $content, $block ) {
 		$post_types = get_post_types( [ 'public' => true ] );
-		$class_name = $attributes['className'];
+		$class_name = $attributes['className'] ?? false;
 		ob_start();
 
 		?>
-		<div class="<?php echo $class_name; ?>">
+		<div class="<?php echo esc_attr( $class_name ); ?>">
 			<h2>Post Counts</h2>
 			<ul>
 			<?php
@@ -90,7 +90,7 @@ class Block {
 			<?php endforeach; ?>
 			</ul>
 			
-			<p><?php echo 'The current post ID is ' . $_GET['post_id'] . '.'; ?></p>
+			<p><?php echo 'The current post ID is ' . get_the_ID() . '.'; ?></p>
 
 			<?php
 			$query = new WP_Query( [
