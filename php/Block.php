@@ -68,20 +68,20 @@ class Block {
 		ob_start();
 
 		?>
-        <div class="<?php echo $class_name; ?>">
+		<div class="<?php echo $class_name; ?>">
 			<h2>Post Counts</h2>
 			<ul>
 			<?php
 			foreach ( $post_types as $post_type_slug ) :
-                $post_type_object = get_post_type_object( $post_type_slug  );
-                $post_count = count(
-                    get_posts(
+				$post_type_object = get_post_type_object( $post_type_slug  );
+				$post_count = count(
+					get_posts(
 						[
 							'post_type' => $post_type_slug,
 							'posts_per_page' => -1,
 						]
 					)
-                );
+				);
 
 				?>
 				<li><?php echo 'There are ' . $post_count . ' ' .
@@ -103,19 +103,19 @@ class Block {
 						'compare'=> '<=',
 					),
 				),
-                'tag'  => 'foo',
-                'category_name'  => 'baz',
-				  'post__not_in' => [ get_the_ID() ],
+				'tag'  => 'foo',
+				'category_name'  => 'baz',
+				'post__not_in' => [ get_the_ID() ],
 			));
 
 			if ( $query->have_posts() ) :
 				?>
 				 <h2>5 posts with the tag of foo and the category of baz</h2>
-                <ul>
-                <?php
+				 <ul>
+				 <?php
 
-                 foreach ( array_slice( $query->posts, 0, 5 ) as $post ) :
-                    ?><li><?php echo $post->post_title ?></li><?php
+				foreach ( array_slice( $query->posts, 0, 5 ) as $post ) :
+					?><li><?php echo $post->post_title ?></li><?php
 				endforeach;
 			endif;
 		 	?>
