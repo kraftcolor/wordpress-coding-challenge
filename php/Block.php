@@ -91,10 +91,20 @@ class Block {
 				<?php endforeach; ?>
 			</ul>
 			
-			<p><?php echo 'The current post ID is ' . get_the_ID() . '.'; ?></p>
+			<p>
+				<?php
+					echo sprintf(
+						/* translators: 1: current post id */
+						__( 'The current post ID is %1$s.', 'site-counts' ),
+						get_the_ID()
+					); 
+				?>
+			</p>
 
 			<?php
 			$query = new WP_Query( [
+				'no_found_rows' => true,
+				'fields' => 'ids',
 				'post_type' => [ 'post', 'page' ],
 				'post_status' => 'any',
 				'date_query' => [
@@ -109,14 +119,21 @@ class Block {
 				],
 				'tag'  => 'foo',
 				'category_name'  => 'baz',
-				'post__not_in' => [ get_the_ID() ],
+				'posts_per_page' => 6,
 			] );
 
-			if ( $query->have_posts() ) : ?>
-				<h2>5 posts with the tag of foo and the category of baz</h2>
+			if ( $query->have_posts() ) : 
+				$posts = $query->posts;
+				$skip_index = array_search( get_the_ID(), $posts );
+
+				if ( $skip_index !== false ) :
+					unset( $posts[ $skip_index ] );
+				endif; ?>
+
+				<h2><?php _e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
 				<ul>
-					<?php foreach ( array_slice( $query->posts, 0, 5 ) as $post ) : ?>
-						<li><?php echo $post->post_title ?></li>
+					<?php foreach ( array_slice( $posts, 0, 5 ) as $post ) : ?>
+						<li><?php echo get_the_title( $post ) ?></li>
 					<?php endforeach;
 			endif; ?>
 			</ul>
