@@ -94,8 +94,8 @@ class Block {
 						<?php 
 							echo esc_html(
 								sprintf( 
-									/* translators: %1$s: post count. %2$s: post type singular name. %3$s: Post type plural name. */
-									_n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ), // phpcs:ignore WordPress.WP.I18n.MismatchedPlaceholders -- Singular and plural placeholders are intentionally different.
+									/* translators: %1$d: post count. %2$s: post type singular name. %3$s: Post type plural name. */
+									_n( 'There is %1$d %2$s', 'There are %1$d %3$s', $post_count->publish, 'site-counts' ), // phpcs:ignore WordPress.WP.I18n.MismatchedPlaceholders -- Singular and plural placeholders are intentionally different.
 									number_format_i18n( $post_count->publish ),
 									$post_type_object->labels->singular_name,
 									$post_type_object->labels->name
@@ -111,7 +111,7 @@ class Block {
 				<?php
 					echo sprintf(
 						/* translators: 1: current post id */
-						esc_html__( 'The current post ID is %1$s.', 'site-counts' ),
+						esc_html__( 'The current post ID is %1$d.', 'site-counts' ),
 						get_the_ID()
 					); 
 				?>
@@ -167,12 +167,25 @@ class Block {
 
 			if ( false !== $skip_index ) :
 				unset( $posts[ $skip_index ] );
-			endif; 
+			endif;
+
+			$posts = array_slice( $posts, 0, 5 );
 			?>
 
-			<h2><?php esc_html_e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
+
+			<h2>
+				<?php
+					echo esc_html(
+						sprintf( 
+							/* translators: %1$s: post count */
+							_n( '%1$d post with the tag of foo and the category of baz', '%1$d posts with the tag of foo and the category of baz', count( $posts ), 'site-counts' ),
+							number_format_i18n( count( $posts ) ),
+						)
+					);
+				?>
+			</h2>
 			<ul>
-				<?php foreach ( array_slice( $posts, 0, 5 ) as $post ) : ?>
+				<?php foreach ( $posts as $post ) : ?>
 					<li><?php echo esc_html( get_the_title( $post ) ); ?></li>
 				<?php endforeach; ?>
 			</ul>
