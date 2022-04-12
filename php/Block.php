@@ -171,7 +171,7 @@ class Block {
 			endif; 
 			?>
 
-			<h2><?php _e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
+			<h2><?php esc_html_e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
 			<ul>
 				<?php foreach ( array_slice( $posts, 0, 5 ) as $post ) : ?>
 					<li><?php echo esc_html( get_the_title( $post ) ); ?></li>
