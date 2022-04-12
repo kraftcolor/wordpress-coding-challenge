@@ -172,16 +172,16 @@ class Block {
 			endif;
 
 			$posts = array_slice( $posts, 0, 5 );
+			$cont_posts = count( $posts );
 			?>
-
 
 			<h2>
 				<?php
 					echo esc_html(
 						sprintf( 
 							/* translators: %1$s: post count */
-							_n( '%1$d post with the tag of foo and the category of baz', '%1$d posts with the tag of foo and the category of baz', count( $posts ), 'site-counts' ),
-							number_format_i18n( count( $posts ) ),
+							_n( '%1$d post with the tag of foo and the category of baz', '%1$d posts with the tag of foo and the category of baz', $cont_posts, 'site-counts' ),
+							number_format_i18n( $cont_posts ),
 						)
 					);
 				?>
