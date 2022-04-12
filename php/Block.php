@@ -109,11 +109,13 @@ class Block {
 
 			<p>
 				<?php
-					echo esc_html( sprintf(
+					echo esc_html(
+						sprintf(
 						/* translators: 1: current post id */
-						__( 'The current post ID is %1$d.', 'site-counts' ),
-						get_the_ID()
-					) ); 
+							__( 'The current post ID is %1$d.', 'site-counts' ),
+							get_the_ID()
+						) 
+					); 
 				?>
 			</p>
 
