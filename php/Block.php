@@ -95,10 +95,10 @@ class Block {
 						<?php 
 							echo sprintf( 
 								/* translators: 1: post count, 2: post type singular name, 3: Post type plural name */
-								_n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ),
-								number_format_i18n( $post_count->publish ),
-								$post_type_object->labels->singular_name,
-								$post_type_object->labels->name
+								esc_html( _n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ) ),
+								esc_html( number_format_i18n( $post_count->publish ) ),
+								esc_html( $post_type_object->labels->singular_name ),
+								esc_html( $post_type_object->labels->name )
 							);
 
 						?>
@@ -110,13 +110,13 @@ class Block {
 				<?php
 					echo sprintf(
 						/* translators: 1: current post id */
-						__( 'The current post ID is %1$s.', 'site-counts' ),
+						esc_html__( 'The current post ID is %1$s.', 'site-counts' ),
 						get_the_ID()
 					); 
 				?>
 			</p>
 
-			<?php echo $this->render_posts_with_tag_cat(); ?>
+			<?php echo wp_kses_post( $this->render_posts_with_tag_cat() ); ?>
 		</div>
 		<?php
 
@@ -132,7 +132,7 @@ class Block {
 	public function render_posts_with_tag_cat() {
 		$cached = wp_cache_get( 'render_posts_with_tag_cat', 'site-counts' );
 
-		if ( $cached !== false ) {
+		if ( false !== $cached ) {
 			return $cached;
 		}
 
@@ -164,7 +164,7 @@ class Block {
 			$posts      = $query->posts;
 			$skip_index = array_search( get_the_ID(), $posts );
 
-			if ( $skip_index !== false ) :
+			if ( false !== $skip_index ) :
 				unset( $posts[ $skip_index ] );
 			endif; 
 			?>
@@ -172,7 +172,7 @@ class Block {
 			<h2><?php _e( '5 posts with the tag of foo and the category of baz', 'site-counts' ); ?></h2>
 			<ul>
 				<?php foreach ( array_slice( $posts, 0, 5 ) as $post ) : ?>
-					<li><?php echo get_the_title( $post ); ?></li>
+					<li><?php echo esc_html( get_the_title( $post ) ); ?></li>
 				<?php endforeach; ?>
 			</ul>
 			<?php 
