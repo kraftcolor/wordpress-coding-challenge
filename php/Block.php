@@ -54,7 +54,7 @@ class Block {
 	 * @return void
 	 */
 	public function flush_caches() {
-		wp_cache_delete( 'render_posts_with_tag_cat', 'site-counts' );
+		wp_cache_delete( 'site_counts_block_render_posts_with_tag_cat', 'site-counts' );
 	}
 
 	/**
@@ -132,7 +132,7 @@ class Block {
 	 * @return string HTML markup
 	 */
 	public function render_posts_with_tag_cat() {
-		$cached = wp_cache_get( 'render_posts_with_tag_cat', 'site-counts' );
+		$cached = wp_cache_get( 'site_counts_block_render_posts_with_tag_cat', 'site-counts' );
 
 		if ( false !== $cached ) {
 			return $cached;
@@ -181,7 +181,7 @@ class Block {
 		endif;
 
 		$html_content = ob_get_clean();
-		wp_cache_set( 'render_posts_with_tag_cat', $html_content, 'site-counts', DAY_IN_SECONDS );
+		wp_cache_set( 'site_counts_block_render_posts_with_tag_cat', $html_content, 'site-counts', DAY_IN_SECONDS );
 
 		return $html_content;
 	}
