@@ -49,6 +49,7 @@ class Block {
 	 * Flush cached HTML markup.
 	 * HTML markup cached in render_posts_with_tag_cat() method.
 	 *
+	 * @param int $post_id Post id which is being edited.
 	 * @return void
 	 */
 	public function flush_caches( $post_id ) {
@@ -91,14 +92,14 @@ class Block {
 					?>
 						<li>
 						<?php 
-							echo sprintf( 
-								esc_html(
+							echo esc_html(
+								sprintf( 
 									/* translators: %1$s: post count. %2$s: post type singular name. %3$s: Post type plural name. */
-									_n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ) 
-								),
-								esc_html( number_format_i18n( $post_count->publish ) ),
-								esc_html( $post_type_object->labels->singular_name ),
-								esc_html( $post_type_object->labels->name )
+									_n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ), // phpcs:ignore WordPress.WP.I18n.MismatchedPlaceholders -- Singular and plural placeholders are intentionally different.
+									number_format_i18n( $post_count->publish ),
+									$post_type_object->labels->singular_name,
+									$post_type_object->labels->name
+								)
 							);
 
 						?>
