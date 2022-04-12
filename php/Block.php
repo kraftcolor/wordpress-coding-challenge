@@ -94,8 +94,10 @@ class Block {
 						<li>
 						<?php 
 							echo sprintf( 
-								/* translators: 1: post count, 2: post type singular name, 3: Post type plural name */
-								esc_html( _n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ) ),
+								esc_html(
+									/* translators: %1$s: post count. %2$s: post type singular name. %3$s: Post type plural name. */
+									_n( 'There is %1$s %2$s', 'There are %1$s %3$s', $post_count->publish, 'site-counts' ) 
+								),
 								esc_html( number_format_i18n( $post_count->publish ) ),
 								esc_html( $post_type_object->labels->singular_name ),
 								esc_html( $post_type_object->labels->name )
