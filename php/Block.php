@@ -42,8 +42,6 @@ class Block {
 		add_action( 'init', [ $this, 'register_block' ] );
 
 		// Clear cache when a post is updated, post status changes, category or tag updated.
-		add_action( 'edit_term', [ $this, 'flush_caches' ], 10, 3 );
-		add_action( 'edit_category', [ $this, 'flush_caches' ], 10, 1 );
 		add_action( 'edit_post', [ $this, 'flush_caches' ], 10, 1 );
 	}
 
@@ -53,8 +51,8 @@ class Block {
 	 *
 	 * @return void
 	 */
-	public function flush_caches() {
-		wp_cache_delete( 'site_counts_block_render_posts_with_tag_cat', 'site-counts' );
+	public function flush_caches( $post_id ) {
+		wp_cache_delete( 'site_counts_block_render_posts_with_tag_cat_' . $post_id, 'site-counts' );
 	}
 
 	/**
