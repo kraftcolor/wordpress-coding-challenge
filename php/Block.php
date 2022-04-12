@@ -171,7 +171,7 @@ class Block {
 				unset( $posts[ $skip_index ] );
 			endif;
 
-			$posts = array_slice( $posts, 0, 5 );
+			$posts      = array_slice( $posts, 0, 5 );
 			$cont_posts = count( $posts );
 			?>
 
