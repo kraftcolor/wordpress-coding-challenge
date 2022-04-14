@@ -9,6 +9,7 @@ namespace XWP\SiteCounts;
 
 use WP_Block;
 use WP_Query;
+use WP_Term;
 
 /**
  * The Site Counts dynamic block.
@@ -40,20 +41,6 @@ class Block {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_block' ] );
-
-		// Clear cache when a post is updated, post status changes, category or tag updated.
-		add_action( 'edit_post', [ $this, 'flush_caches' ], 10, 1 );
-	}
-
-	/**
-	 * Flush cached HTML markup.
-	 * HTML markup cached in render_posts_with_tag_cat() method.
-	 *
-	 * @param int $post_id Post id which is being edited.
-	 * @return void
-	 */
-	public function flush_caches( $post_id ) {
-		wp_cache_delete( 'site_counts_block_render_posts_with_tag_cat_' . $post_id, 'site-counts' );
 	}
 
 	/**
@@ -133,7 +120,20 @@ class Block {
 	 * @return string HTML markup
 	 */
 	public function render_posts_with_tag_cat() {
-		$cached = wp_cache_get( 'site_counts_block_render_posts_with_tag_cat_' . get_the_ID(), 'site-counts' );
+		$tag = get_term_by( 'name', 'foo', 'post_tag' );
+		$cat = get_term_by( 'name', 'baz', 'category' );
+		$tag_count = 0;
+		$cat_count = 0;
+
+		if ( $tag instanceof WP_Term ) {
+			$tag_count = $tag->count;
+		}
+
+		if ( $cat instanceof WP_Term ) {
+			$cat_count = $cat->count;
+		}
+
+		$cached = wp_cache_get( 'site_counts_block_render_posts_with_tag_cat_' . $tag_count . $cat_count, 'site-counts' );
 
 		if ( false !== $cached ) {
 			return $cached;
@@ -195,7 +195,7 @@ class Block {
 		endif;
 
 		$html_content = ob_get_clean();
-		wp_cache_set( 'site_counts_block_render_posts_with_tag_cat_' . get_the_ID(), $html_content, 'site-counts', DAY_IN_SECONDS );
+		wp_cache_set( 'site_counts_block_render_posts_with_tag_cat_' . $tag_count . $cat_count, $html_content, 'site-counts', DAY_IN_SECONDS );
 
 		return $html_content;
 	}
