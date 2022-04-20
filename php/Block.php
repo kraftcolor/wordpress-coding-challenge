@@ -120,8 +120,8 @@ class Block {
 	 * @return string HTML markup
 	 */
 	public function render_posts_with_tag_cat() {
-		$tag = get_term_by( 'name', 'foo', 'post_tag' );
-		$cat = get_term_by( 'name', 'baz', 'category' );
+		$tag       = get_term_by( 'name', 'foo', 'post_tag' );
+		$cat       = get_term_by( 'name', 'baz', 'category' );
 		$tag_count = 0;
 		$cat_count = 0;
 
