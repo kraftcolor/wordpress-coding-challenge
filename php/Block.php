@@ -157,9 +157,9 @@ class Block {
 						'compare' => '<=',
 					],
 				],
-				'tag'                   => 'foo',
-				'category_name'         => 'baz',
-				'posts_per_page'        => 6,
+				'tag'                    => 'foo',
+				'category_name'          => 'baz',
+				'posts_per_page'         => 6,
 			] 
 		);
 
