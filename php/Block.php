@@ -141,11 +141,13 @@ class Block {
 
 		$query = new WP_Query(
 			[
-				'no_found_rows'  => true,
-				'fields'         => 'ids',
-				'post_type'      => [ 'post', 'page' ],
-				'post_status'    => 'any',
-				'date_query'     => [
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'fields'                 => 'ids',
+				'post_type'              => [ 'post', 'page' ],
+				'post_status'            => 'any',
+				'date_query'             => [
 					[
 						'hour'    => 9,
 						'compare' => '>=',
@@ -155,9 +157,9 @@ class Block {
 						'compare' => '<=',
 					],
 				],
-				'tag'            => 'foo',
-				'category_name'  => 'baz',
-				'posts_per_page' => 6,
+				'tag'                   => 'foo',
+				'category_name'         => 'baz',
+				'posts_per_page'        => 6,
 			] 
 		);
 
